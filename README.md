@@ -4,7 +4,7 @@
 本次项目目录定义如下
 
 ```
-`├── api/app/application // App层，处理Adapter层适配过后与框架、协议等无关的业务逻辑
+├── api/app/application // App层，处理Adapter层适配过后与框架、协议等无关的业务逻辑
 ├   ├── api 处理OpenAPI 接口请求
 ├   ├── web  请求Web页面请求
 ├   ├── scheduler/task  //处理定时任务，比如Cron格式的定时Job
@@ -24,7 +24,7 @@
 ├── test // 单元测试之外的测试程序、测试数据
 ├── util/tools 工具包
 ├── main.go 项目运行入口
-└── pkg // 各层可共享的公共组件代码`
+└── pkg // 各层可共享的公共组件代码
 ```
 
 
