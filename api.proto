@@ -1,0 +1,382 @@
+syntax = "proto3";
+
+package party_school;
+
+option go_package = "github.com/party-school/api";
+
+// 导入Google API的通用类型
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+// 基础响应消息
+message BaseResponse {
+  string message = 1;
+  string status = 2;
+}
+
+// 分页响应
+message PaginationResponse {
+  repeated google.protobuf.Any data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+// 用户相关消息
+message User {
+  uint32 id = 1;
+  string username = 2;
+  string name = 3;
+  string role = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  User user = 2;
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string name = 3;
+  string role = 4;
+}
+
+message RegisterResponse {
+  string message = 1;
+  User user = 2;
+}
+
+message ProfileResponse {
+  User user = 1;
+}
+
+// 学员相关消息
+message Student {
+  uint32 id = 1;
+  string student_no = 2;
+  string name = 3;
+  string gender = 4;
+  string ethnicity = 5;
+  google.protobuf.Timestamp birth_date = 6;
+  string education = 7;
+  string phone = 8;
+  string id_card = 9;
+  string major_class = 10;
+  string type = 11;
+  google.protobuf.Timestamp admission_date = 12;
+  google.protobuf.Timestamp conversion_date = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}
+
+message ListStudentsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListStudentsResponse {
+  repeated Student data = 1;
+  int32 total = 2;
+  int32 page = 3;
+}
+
+message GetStudentRequest {
+  uint32 id = 1;
+}
+
+message CreateStudentRequest {
+  string student_no = 1;
+  string name = 2;
+  string gender = 3;
+  string ethnicity = 4;
+  google.protobuf.Timestamp birth_date = 5;
+  string education = 6;
+  string phone = 7;
+  string id_card = 8;
+  string major_class = 9;
+  string type = 10;
+  google.protobuf.Timestamp admission_date = 11;
+}
+
+message UpdateStudentRequest {
+  uint32 id = 1;
+  string name = 2;
+  string gender = 3;
+  string type = 4;
+  string phone = 5;
+}
+
+message DeleteStudentRequest {
+  uint32 id = 1;
+}
+
+message DeleteStudentResponse {
+  string message = 1;
+}
+
+// 发展历程相关消息
+message Development {
+  uint32 id = 1;
+  uint32 student_id = 2;
+  google.protobuf.Timestamp apply_date = 3;
+  google.protobuf.Timestamp activist_date = 4;
+  google.protobuf.Timestamp candidate_date = 5;
+  google.protobuf.Timestamp probation_date = 6;
+  google.protobuf.Timestamp conversion_date = 7;
+  google.protobuf.Timestamp transfer_date = 8;
+  google.protobuf.Timestamp introduction_date = 9;
+  string status = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  Student student = 13;
+}
+
+message GetDevelopmentRequest {
+  uint32 id = 1;
+}
+
+message UpdateDevelopmentRequest {
+  uint32 id = 1;
+  google.protobuf.Timestamp apply_date = 2;
+  google.protobuf.Timestamp activist_date = 3;
+  google.protobuf.Timestamp candidate_date = 4;
+  google.protobuf.Timestamp probation_date = 5;
+  google.protobuf.Timestamp conversion_date = 6;
+  string status = 7;
+}
+
+// 奖惩记录相关消息
+message Reward {
+  uint32 id = 1;
+  uint32 student_id = 2;
+  string type = 3;
+  string content = 4;
+  google.protobuf.Timestamp date = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  Student student = 8;
+}
+
+message GetRewardsRequest {
+  uint32 id = 1;
+}
+
+message GetRewardsResponse {
+  repeated Reward rewards = 1;
+}
+
+message CreateRewardRequest {
+  uint32 id = 1;
+  string type = 2;
+  string content = 3;
+  google.protobuf.Timestamp date = 4;
+}
+
+// 培训相关消息
+message Training {
+  uint32 id = 1;
+  string period = 2;
+  uint32 student_id = 3;
+  string unit = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  string score = 7;
+  string certificate_no = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  Student student = 11;
+}
+
+message ListTrainingsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListTrainingsResponse {
+  repeated Training data = 1;
+  int32 total = 2;
+  int32 page = 3;
+}
+
+message GetTrainingRequest {
+  uint32 id = 1;
+}
+
+message CreateTrainingRequest {
+  string period = 1;
+  uint32 student_id = 2;
+  string unit = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  string score = 6;
+  string certificate_no = 7;
+}
+
+message UpdateTrainingRequest {
+  uint32 id = 1;
+  string period = 2;
+  string unit = 3;
+  string score = 4;
+}
+
+message DeleteTrainingRequest {
+  uint32 id = 1;
+}
+
+message DeleteTrainingResponse {
+  string message = 1;
+}
+
+// 统计相关消息
+message TrainingStats {
+  int32 excellent = 1;
+  int32 good = 2;
+  int32 pass = 3;
+  int32 fail = 4;
+}
+
+// 健康检查消息
+message HealthResponse {
+  string status = 1;
+  string message = 2;
+}
+
+// 服务定义
+service PartySchoolService {
+  // 认证相关
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/login"
+      body: "*"
+    };
+  }
+  
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/register"
+      body: "*"
+    };
+  }
+  
+  rpc GetProfile(google.protobuf.Empty) returns (ProfileResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/profile"
+    };
+  }
+
+  // 学员管理
+  rpc ListStudents(ListStudentsRequest) returns (ListStudentsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/students"
+    };
+  }
+  
+  rpc GetStudent(GetStudentRequest) returns (Student) {
+    option (google.api.http) = {
+      get: "/api/v1/students/{id}"
+    };
+  }
+  
+  rpc CreateStudent(CreateStudentRequest) returns (Student) {
+    option (google.api.http) = {
+      post: "/api/v1/students"
+      body: "*"
+    };
+  }
+  
+  rpc UpdateStudent(UpdateStudentRequest) returns (Student) {
+    option (google.api.http) = {
+      put: "/api/v1/students/{id}"
+      body: "*"
+    };
+  }
+  
+  rpc DeleteStudent(DeleteStudentRequest) returns (DeleteStudentResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/students/{id}"
+    };
+  }
+
+  // 发展历程
+  rpc GetDevelopment(GetDevelopmentRequest) returns (Development) {
+    option (google.api.http) = {
+      get: "/api/v1/students/{id}/development"
+    };
+  }
+  
+  rpc UpdateDevelopment(UpdateDevelopmentRequest) returns (Development) {
+    option (google.api.http) = {
+      put: "/api/v1/students/{id}/development"
+      body: "*"
+    };
+  }
+
+  // 奖惩记录
+  rpc GetRewards(GetRewardsRequest) returns (GetRewardsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/students/{id}/rewards"
+    };
+  }
+  
+  rpc CreateReward(CreateRewardRequest) returns (Reward) {
+    option (google.api.http) = {
+      post: "/api/v1/students/{id}/rewards"
+      body: "*"
+    };
+  }
+
+  // 培训管理
+  rpc ListTrainings(ListTrainingsRequest) returns (ListTrainingsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/trainings"
+    };
+  }
+  
+  rpc GetTraining(GetTrainingRequest) returns (Training) {
+    option (google.api.http) = {
+      get: "/api/v1/trainings/{id}"
+    };
+  }
+  
+  rpc CreateTraining(CreateTrainingRequest) returns (Training) {
+    option (google.api.http) = {
+      post: "/api/v1/trainings"
+      body: "*"
+    };
+  }
+  
+  rpc UpdateTraining(UpdateTrainingRequest) returns (Training) {
+    option (google.api.http) = {
+      put: "/api/v1/trainings/{id}"
+      body: "*"
+    };
+  }
+  
+  rpc DeleteTraining(DeleteTrainingRequest) returns (DeleteTrainingResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/trainings/{id}"
+    };
+  }
+
+  // 统计分析
+  rpc GetTrainingStats(google.protobuf.Empty) returns (TrainingStats) {
+    option (google.api.http) = {
+      get: "/api/v1/statistics/trainings"
+    };
+  }
+
+  // 健康检查
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthResponse) {
+    option (google.api.http) = {
+      get: "/health"
+    };
+  }
+}

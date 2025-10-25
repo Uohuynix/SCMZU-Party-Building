@@ -1,0 +1,1501 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "党校管理系统 API",
+    "description": "基于Go语言和Gin框架开发的党校管理系统API接口文档",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "email": "support@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "系统状态",
+      "description": "系统健康检查相关接口"
+    },
+    {
+      "name": "用户认证",
+      "description": "用户登录、注册、认证相关接口"
+    },
+    {
+      "name": "学员管理",
+      "description": "学员信息管理相关接口"
+    },
+    {
+      "name": "党员发展历程",
+      "description": "党员发展历程管理相关接口"
+    },
+    {
+      "name": "奖惩记录",
+      "description": "学员奖惩记录管理相关接口"
+    },
+    {
+      "name": "培训管理",
+      "description": "培训记录管理相关接口"
+    },
+    {
+      "name": "统计分析",
+      "description": "数据统计分析相关接口"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["系统状态"],
+        "summary": "健康检查",
+        "description": "检查系统运行状态",
+        "responses": {
+          "200": {
+            "description": "系统正常运行",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Party Building Management System is running"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": ["用户认证"],
+        "summary": "用户登录",
+        "description": "用户登录获取JWT Token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "用户名",
+                    "example": "admin"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "密码",
+                    "example": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登录成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "JWT Token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "管理员"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": ["admin", "teacher", "student"],
+                          "example": "admin"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "认证失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": ["用户认证"],
+        "summary": "用户注册",
+        "description": "注册新用户",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password", "name"],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "用户名",
+                    "example": "newuser"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "密码",
+                    "example": "password123"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "姓名",
+                    "example": "新用户"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": ["admin", "teacher", "student"],
+                    "default": "student",
+                    "description": "用户角色",
+                    "example": "student"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "注册成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 4
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "newuser"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "新用户"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "student"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profile": {
+      "get": {
+        "tags": ["用户认证"],
+        "summary": "获取用户信息",
+        "description": "获取当前登录用户的详细信息",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "管理员"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "admin"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未授权",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students": {
+      "get": {
+        "tags": ["学员管理"],
+        "summary": "获取学员列表",
+        "description": "分页获取学员列表",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "页码",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每页数量",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Student"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "总数量",
+                      "example": 100
+                    },
+                    "page": {
+                      "type": "integer",
+                      "description": "当前页码",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["学员管理"],
+        "summary": "创建学员",
+        "description": "创建新学员",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStudentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "创建成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students/{id}": {
+      "get": {
+        "tags": ["学员管理"],
+        "summary": "获取学员详情",
+        "description": "根据ID获取学员详细信息",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "学员ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "学员不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["学员管理"],
+        "summary": "更新学员信息",
+        "description": "更新指定学员的信息",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "学员ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStudentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["学员管理"],
+        "summary": "删除学员",
+        "description": "删除指定学员",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "学员ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Student deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students/{id}/development": {
+      "get": {
+        "tags": ["党员发展历程"],
+        "summary": "获取学员发展历程",
+        "description": "获取指定学员的党员发展历程",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "学员ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Development"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["党员发展历程"],
+        "summary": "更新学员发展历程",
+        "description": "更新指定学员的党员发展历程",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "学员ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDevelopmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Development"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students/{id}/rewards": {
+      "get": {
+        "tags": ["奖惩记录"],
+        "summary": "获取学员奖惩记录",
+        "description": "获取指定学员的奖惩记录列表",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "学员ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reward"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["奖惩记录"],
+        "summary": "创建奖惩记录",
+        "description": "为指定学员创建奖惩记录",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "学员ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRewardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "创建成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reward"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trainings": {
+      "get": {
+        "tags": ["培训管理"],
+        "summary": "获取培训列表",
+        "description": "分页获取培训记录列表",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "页码",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每页数量",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Training"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "example": 50
+                    },
+                    "page": {
+                      "type": "integer",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["培训管理"],
+        "summary": "创建培训记录",
+        "description": "创建新的培训记录",
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrainingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "创建成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Training"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trainings/{id}": {
+      "get": {
+        "tags": ["培训管理"],
+        "summary": "获取培训详情",
+        "description": "根据ID获取培训记录详情",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "培训记录ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Training"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["培训管理"],
+        "summary": "更新培训记录",
+        "description": "更新指定培训记录",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "培训记录ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTrainingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Training"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["培训管理"],
+        "summary": "删除培训记录",
+        "description": "删除指定培训记录",
+        "security": [{"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "培训记录ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Training deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/statistics/trainings": {
+      "get": {
+        "tags": ["统计分析"],
+        "summary": "获取培训统计",
+        "description": "获取培训成绩统计数据",
+        "security": [{"bearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "获取成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "excellent": {
+                      "type": "integer",
+                      "description": "优秀人数",
+                      "example": 5
+                    },
+                    "good": {
+                      "type": "integer",
+                      "description": "良好人数",
+                      "example": 8
+                    },
+                    "pass": {
+                      "type": "integer",
+                      "description": "及格人数",
+                      "example": 12
+                    },
+                    "fail": {
+                      "type": "integer",
+                      "description": "不及格人数",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT Token认证"
+      }
+    },
+    "schemas": {
+      "Student": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "学员ID",
+            "example": 1
+          },
+          "student_no": {
+            "type": "string",
+            "description": "学号",
+            "example": "2021001"
+          },
+          "name": {
+            "type": "string",
+            "description": "姓名",
+            "example": "张三"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["male", "female"],
+            "description": "性别",
+            "example": "male"
+          },
+          "ethnicity": {
+            "type": "string",
+            "description": "民族",
+            "example": "汉族"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "出生日期",
+            "example": "2000-01-01T00:00:00Z"
+          },
+          "education": {
+            "type": "string",
+            "description": "学历",
+            "example": "本科"
+          },
+          "phone": {
+            "type": "string",
+            "description": "电话",
+            "example": "13800138001"
+          },
+          "id_card": {
+            "type": "string",
+            "description": "身份证号",
+            "example": "110101200001011234"
+          },
+          "major_class": {
+            "type": "string",
+            "description": "专业班级",
+            "example": "计算机科学与技术"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["masses", "activist", "candidate", "probationary", "formal"],
+            "description": "政治面貌",
+            "example": "masses"
+          },
+          "admission_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "入学日期",
+            "example": "2021-09-01T00:00:00Z"
+          },
+          "conversion_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "转正日期",
+            "example": "2023-06-01T00:00:00Z"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建时间",
+            "example": "2021-09-01T00:00:00Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "更新时间",
+            "example": "2021-09-01T00:00:00Z"
+          }
+        }
+      },
+      "CreateStudentRequest": {
+        "type": "object",
+        "required": ["student_no", "name"],
+        "properties": {
+          "student_no": {
+            "type": "string",
+            "description": "学号",
+            "example": "2024001"
+          },
+          "name": {
+            "type": "string",
+            "description": "姓名",
+            "example": "李四"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["male", "female"],
+            "description": "性别",
+            "example": "female"
+          },
+          "ethnicity": {
+            "type": "string",
+            "description": "民族",
+            "example": "汉族"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "出生日期",
+            "example": "2000-05-15T00:00:00Z"
+          },
+          "education": {
+            "type": "string",
+            "description": "学历",
+            "example": "本科"
+          },
+          "phone": {
+            "type": "string",
+            "description": "电话",
+            "example": "13800138002"
+          },
+          "id_card": {
+            "type": "string",
+            "description": "身份证号",
+            "example": "110101200005151234"
+          },
+          "major_class": {
+            "type": "string",
+            "description": "专业班级",
+            "example": "软件工程"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["masses", "activist", "candidate", "probationary", "formal"],
+            "default": "masses",
+            "description": "政治面貌",
+            "example": "masses"
+          },
+          "admission_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "入学日期",
+            "example": "2024-09-01T00:00:00Z"
+          }
+        }
+      },
+      "UpdateStudentRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "姓名",
+            "example": "李四（更新）"
+          },
+          "gender": {
+            "type": "string",
+            "enum": ["male", "female"],
+            "description": "性别",
+            "example": "female"
+          },
+          "ethnicity": {
+            "type": "string",
+            "description": "民族",
+            "example": "汉族"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "出生日期"
+          },
+          "education": {
+            "type": "string",
+            "description": "学历",
+            "example": "本科"
+          },
+          "phone": {
+            "type": "string",
+            "description": "电话",
+            "example": "13800138999"
+          },
+          "id_card": {
+            "type": "string",
+            "description": "身份证号"
+          },
+          "major_class": {
+            "type": "string",
+            "description": "专业班级",
+            "example": "软件工程"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["masses", "activist", "candidate", "probationary", "formal"],
+            "description": "政治面貌",
+            "example": "activist"
+          },
+          "admission_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "入学日期"
+          },
+          "conversion_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "转正日期"
+          }
+        }
+      },
+      "Development": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "发展历程ID",
+            "example": 1
+          },
+          "student_id": {
+            "type": "integer",
+            "description": "学员ID",
+            "example": 1
+          },
+          "apply_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "申请入党日期",
+            "example": "2021-10-01T00:00:00Z"
+          },
+          "activist_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "入党积极分子日期",
+            "example": "2021-11-01T00:00:00Z"
+          },
+          "candidate_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "发展对象日期",
+            "example": "2022-03-01T00:00:00Z"
+          },
+          "probation_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "预备党员日期",
+            "example": "2022-06-01T00:00:00Z"
+          },
+          "conversion_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "转正日期",
+            "example": "2023-06-01T00:00:00Z"
+          },
+          "transfer_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "转出日期"
+          },
+          "introduction_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "介绍人日期"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["masses", "activist", "candidate", "probationary", "formal"],
+            "description": "当前状态",
+            "example": "formal"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建时间"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "更新时间"
+          },
+          "student": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "student_no": {
+                "type": "string",
+                "example": "2021001"
+              },
+              "name": {
+                "type": "string",
+                "example": "张三"
+              }
+            }
+          }
+        }
+      },
+      "UpdateDevelopmentRequest": {
+        "type": "object",
+        "properties": {
+          "apply_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "申请入党日期"
+          },
+          "activist_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "入党积极分子日期"
+          },
+          "candidate_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "发展对象日期"
+          },
+          "probation_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "预备党员日期"
+          },
+          "conversion_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "转正日期"
+          },
+          "transfer_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "转出日期"
+          },
+          "introduction_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "介绍人日期"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["masses", "activist", "candidate", "probationary", "formal"],
+            "description": "当前状态"
+          }
+        }
+      },
+      "Reward": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "奖惩记录ID",
+            "example": 1
+          },
+          "student_id": {
+            "type": "integer",
+            "description": "学员ID",
+            "example": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": ["reward", "punishment"],
+            "description": "类型",
+            "example": "reward"
+          },
+          "content": {
+            "type": "string",
+            "description": "内容",
+            "example": "优秀学生干部"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "日期",
+            "example": "2021-12-01T00:00:00Z"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建时间"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "更新时间"
+          },
+          "student": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "student_no": {
+                "type": "string",
+                "example": "2021001"
+              },
+              "name": {
+                "type": "string",
+                "example": "张三"
+              }
+            }
+          }
+        }
+      },
+      "CreateRewardRequest": {
+        "type": "object",
+        "required": ["type", "content", "date"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["reward", "punishment"],
+            "description": "类型",
+            "example": "reward"
+          },
+          "content": {
+            "type": "string",
+            "description": "内容",
+            "example": "三好学生"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "日期",
+            "example": "2024-01-01T00:00:00Z"
+          }
+        }
+      },
+      "Training": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "培训记录ID",
+            "example": 1
+          },
+          "period": {
+            "type": "string",
+            "description": "期次",
+            "example": "2021年春季"
+          },
+          "student_id": {
+            "type": "integer",
+            "description": "学员ID",
+            "example": 1
+          },
+          "unit": {
+            "type": "string",
+            "description": "培训单位",
+            "example": "马克思主义学院"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "开始日期",
+            "example": "2021-03-01T00:00:00Z"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "结束日期",
+            "example": "2021-06-30T00:00:00Z"
+          },
+          "score": {
+            "type": "string",
+            "enum": ["excellent", "good", "pass", "fail"],
+            "description": "成绩",
+            "example": "excellent"
+          },
+          "certificate_no": {
+            "type": "string",
+            "description": "证书编号",
+            "example": "CERT2021001"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建时间"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "更新时间"
+          },
+          "student": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "student_no": {
+                "type": "string",
+                "example": "2021001"
+              },
+              "name": {
+                "type": "string",
+                "example": "张三"
+              }
+            }
+          }
+        }
+      },
+      "CreateTrainingRequest": {
+        "type": "object",
+        "required": ["period", "student_id", "unit", "start_date", "end_date"],
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "期次",
+            "example": "2024年春季"
+          },
+          "student_id": {
+            "type": "integer",
+            "description": "学员ID",
+            "example": 1
+          },
+          "unit": {
+            "type": "string",
+            "description": "培训单位",
+            "example": "党校"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "开始日期",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "结束日期",
+            "example": "2024-01-07T00:00:00Z"
+          },
+          "score": {
+            "type": "string",
+            "enum": ["excellent", "good", "pass", "fail"],
+            "description": "成绩",
+            "example": "excellent"
+          },
+          "certificate_no": {
+            "type": "string",
+            "description": "证书编号",
+            "example": "CERT2024001"
+          }
+        }
+      },
+      "UpdateTrainingRequest": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "期次"
+          },
+          "unit": {
+            "type": "string",
+            "description": "培训单位"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "开始日期"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "结束日期"
+          },
+          "score": {
+            "type": "string",
+            "enum": ["excellent", "good", "pass", "fail"],
+            "description": "成绩"
+          },
+          "certificate_no": {
+            "type": "string",
+            "description": "证书编号"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "错误信息",
+            "example": "Invalid request parameters"
+          }
+        }
+      }
+    }
+  }
+}
+
