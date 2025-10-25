@@ -98,9 +98,7 @@ cd dangjiantest
 
 ### 2. 安装依赖
 
-bash
-
-```
+```bash
 go mod tidy
 ```
 
@@ -110,9 +108,7 @@ go mod tidy
 
 复制 `config.env` 文件并修改数据库配置：
 
-bash
-
-```
+```bash
 # 数据库配置
 DB_HOST=localhost
 DB_PORT=3306
@@ -133,9 +129,7 @@ ENVIRONMENT=development
 
 ### 4. 创建数据库
 
-sql
-
-```
+```sql
 CREATE DATABASE party_school CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
@@ -145,36 +139,15 @@ CREATE DATABASE party_school CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 #### 方法一：使用启动脚本（推荐）
 
-bash
-
-```
+```bash
 # Windows
 start_server.bat
-
-# Linux/Mac
-chmod +x start_server.sh
-./start_server.sh
 ```
-
-
 
 #### 方法二：手动启动
 
-bash
-
-```
+```bash
 go run main.go
-```
-
-
-
-#### 方法三：编译后运行
-
-bash
-
-```
-go build -o party_school.exe .
-./party_school.exe
 ```
 
 
